@@ -1,37 +1,67 @@
-## Welcome to GitHub Pages
+# React Documentation & Website
 
-You can use the [editor on GitHub](https://github.com/Leesson/Leesson.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+We use [Jekyll](http://jekyllrb.com/) to build the site using ([mostly](http://zpao.com/posts/adding-line-highlights-to-markdown-code-fences/)) Markdown, and we host it by pushing HTML to [GitHub Pages](http://pages.github.com/).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Installation
 
-### Markdown
+If you are working on the site, you will want to install and run a local copy of it.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Dependencies
 
-```markdown
-Syntax highlighted code block
+In order to use Jekyll, you will need to have Ruby installed.
 
-# Header 1
-## Header 2
-### Header 3
+ - [Ruby](http://www.ruby-lang.org/) (version >= 1.8.7)
+ - [RubyGems](http://rubygems.org/) (version >= 1.3.7)
+ - [Bundler](http://gembundler.com/)
 
-- Bulleted
-- List
+Mac OS X comes pre-installed with Ruby, but you may need to update RubyGems (via `gem update --system`).
+Otherwise, [RVM](https://rvm.io/) and [rbenv](https://github.com/sstephenson/rbenv) are popular ways to install Ruby.
+Once you have RubyGems and installed Bundler (via `gem install bundler`), use it to install the dependencies:
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```sh
+$ cd react/docs
+$ bundle install # Might need sudo.
+$ npm install
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Instructions
 
-### Jekyll Themes
+The site requires React, so first make sure you've built the project (via `grunt`).
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Leesson/Leesson.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Use Jekyll to serve the website locally (by default, at `http://localhost:4000`):
 
-### Support or Contact
+```sh
+$ cd react/docs
+$ bundle exec rake
+$ bundle exec jekyll serve -w
+$ open http://localhost:4000/react/
+```
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+We use [SASS](http://sass-lang.com/) (with [Bourbon](http://bourbon.io/)) for our CSS, and we use JSX to transform some of our JS.
+If you only want to modify the HTML or Markdown, you do not have to do anything because we package pre-compiled copies of the CSS and JS.
+If you want to modify the CSS or JS, use [Rake](http://rake.rubyforge.org/) to compile them:
+
+```sh
+$ cd react/docs
+$ bundle exec rake watch # Automatically compiles as needed.
+# bundle exec rake         Manually compile CSS and JS.
+# bundle exec rake js      Manually compile JS, only.
+```
+
+## Afterthoughts
+
+### Updating `facebook.github.io/react`
+
+The easiest way to do this is to have a separate clone of this repository, checked out to the `gh-pages` branch. We have a build step that expects this to be in a directory named `react-gh-pages` at the same depth as `react`. Then it's just a matter of running `grunt docs`, which will compile the site and copy it out to this repository. From there, you can check it in.
+
+**Note:** This should only be done for new releases. You should create a tag corresponding to the release tag in the main repository.
+
+We also have a rake task that does the same thing (without creating commits). It expects the directory structure mentioned above.
+
+```sh
+$ bundle exec rake release
+```
+
+### Removing the Jekyll / Ruby Dependency
+
+In an ideal world, we would not be adding a Ruby dependency on part of our project. We would like to move towards a point where we are using React to render the website.
